@@ -12,7 +12,7 @@ DATABASE_URL=your_azure_sql_connection_string_here
 # Server Configuration
 PORT=8000
 
-# Example connection string format:
-# DATABASE_URL=mssql+pyodbc://username:password@server.database.windows.net:1433/database?driver=ODBC+Driver+17+for+SQL+Server
+# Example connection string format (Updated for pymssql):
+# DATABASE_URL=mssql+pymssql://username:password@server.database.windows.net:1433/database
 
 # Note: Replace the example values with your actual credentials before adding to Railway
