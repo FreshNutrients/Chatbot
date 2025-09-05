@@ -4,9 +4,8 @@ uvicorn[standard]==0.24.0
 pydantic==2.5.0
 pydantic-settings==2.1.0
 
-# Database Connectivity
-pyodbc==5.0.1
-asyncpg==0.29.0
+# Database Connectivity - Railway Compatible
+pymssql==2.2.8
 sqlalchemy==2.0.23
 
 # Azure Services

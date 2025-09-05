@@ -1,0 +1,5 @@
+# Railway build configuration
+# This tells Railway to use a different ODBC driver approach
+
+# Use nixpacks for Python build (Railway's default)
+# This avoids Docker build issues with ODBC drivers

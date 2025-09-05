@@ -16,7 +16,6 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, async_sessi
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import QueuePool
 from sqlalchemy.exc import SQLAlchemyError
-import pyodbc
 import asyncio
 from datetime import datetime
 
@@ -49,12 +48,11 @@ class DatabaseManager:
             # Public hostname (requires firewall rules for development)
             server_host = settings.AZURE_SQL_SERVER
         
-        # Synchronous connection string (pyodbc)
+        # Synchronous connection string (pymssql)
         sync_conn_str = (
-            f"mssql+pyodbc://{settings.AZURE_SQL_USERNAME}:{settings.AZURE_SQL_PASSWORD}"
+            f"mssql+pymssql://{settings.AZURE_SQL_USERNAME}:{settings.AZURE_SQL_PASSWORD}"
             f"@{server_host}/{settings.AZURE_SQL_DATABASE}"
-            f"?driver=ODBC+Driver+17+for+SQL+Server"
-            f"&Encrypt=yes&TrustServerCertificate=no&Connection+Timeout=30"
+            f"?charset=utf8"
         )
         
         # For now, we'll use the sync connection string for both since aioodbc may not be available
