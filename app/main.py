@@ -118,11 +118,12 @@ if settings.ENABLE_RATE_LIMITING:
     app.add_middleware(RateLimitMiddleware)
 
 # Add trusted host middleware for production
-if settings.ENVIRONMENT == "production":
-    app.add_middleware(
-        TrustedHostMiddleware, 
-        allowed_hosts=["freshnutrients.com", "*.freshnutrients.com", "*.railway.app", "*.up.railway.app", "localhost"]
-    )
+# Temporarily disabled for Railway debugging
+# if settings.ENVIRONMENT == "production":
+#     app.add_middleware(
+#         TrustedHostMiddleware, 
+#         allowed_hosts=["freshnutrients.com", "*.freshnutrients.com", "*.railway.app", "*.up.railway.app", "localhost"]
+#     )
 
 # Configure CORS for Wix integration
 app.add_middleware(
@@ -178,6 +179,19 @@ async def health_check():
     except Exception as e:
         logger.error(f"Health check failed: {e}")
         raise HTTPException(status_code=503, detail="Service unavailable")
+
+
+@app.get("/debug/env")
+async def debug_environment():
+    """Check environment configuration for debugging."""
+    return {
+        "environment": settings.ENVIRONMENT,
+        "azure_sql_configured": settings.is_azure_sql_configured,
+        "azure_openai_configured": settings.is_azure_openai_configured,
+        "azure_sql_server": settings.AZURE_SQL_SERVER,
+        "cors_origins": settings.ALLOWED_ORIGINS,
+        "port": settings.API_PORT
+    }
 
 
 # Development monitoring endpoints (minimal set)
