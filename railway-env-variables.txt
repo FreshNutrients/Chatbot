@@ -1,0 +1,18 @@
+# Environment Variables for Railway Deployment
+
+# Copy these exact variable names and add your values in Railway dashboard
+
+# Azure OpenAI Configuration
+AZURE_OPENAI_API_KEY=your_azure_openai_api_key_here
+AZURE_OPENAI_ENDPOINT=your_azure_openai_endpoint_here
+
+# Database Configuration  
+DATABASE_URL=your_azure_sql_connection_string_here
+
+# Server Configuration
+PORT=8000
+
+# Example connection string format:
+# DATABASE_URL=mssql+pyodbc://username:password@server.database.windows.net:1433/database?driver=ODBC+Driver+17+for+SQL+Server
+
+# Note: Replace the example values with your actual credentials before adding to Railway
