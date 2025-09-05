@@ -30,8 +30,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy application code and static files
 COPY app/ app/
+COPY chat_test_interface.html .
+COPY wix_preview_interface.html .
 
 # Create non-root user for security
 RUN groupadd -r appuser && useradd -r -g appuser appuser && \
