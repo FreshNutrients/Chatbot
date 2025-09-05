@@ -1,0 +1,109 @@
+# Azure Container Apps Deployment with Database Integration
+# This configuration ensures proper networking between Container Apps and Azure SQL
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: freshnutrients-config
+data:
+  # Production Environment Variables
+  ENVIRONMENT: "production"
+  API_HOST: "0.0.0.0"
+  API_PORT: "8000"
+  
+  # Security Settings
+  ENABLE_API_AUTH: "true"
+  ENABLE_RATE_LIMITING: "true"
+  ENABLE_HTTPS_REDIRECT: "true"
+  
+  # Azure SQL Configuration (using Container Apps managed identity)
+  AZURE_SQL_SERVER: "freshnutrients.database.windows.net"
+  AZURE_SQL_DATABASE: "FreshNutrientsDB"
+  
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freshnutrients-chatbot
+  labels:
+    app: freshnutrients-chatbot
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: freshnutrients-chatbot
+  template:
+    metadata:
+      labels:
+        app: freshnutrients-chatbot
+    spec:
+      # Use Azure Container Apps managed identity
+      serviceAccountName: freshnutrients-identity
+      containers:
+      - name: chatbot-api
+        image: freshnutrients/chatbot-api:latest
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: freshnutrients-config
+        env:
+        # Secrets for sensitive data
+        - name: API_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: api-secret-key
+        - name: AZURE_SQL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: username
+        - name: AZURE_SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: password
+        - name: AZURE_OPENAI_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ai-secrets
+              key: openai-key
+        - name: AZURE_OPENAI_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: ai-secrets
+              key: openai-endpoint
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: freshnutrients-service
+spec:
+  selector:
+    app: freshnutrients-chatbot
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
+  type: LoadBalancer

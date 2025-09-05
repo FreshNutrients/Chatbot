@@ -1,0 +1,22 @@
+Changes for Chatbot
+
+OVERALL GUIDELINES
+- change to SPECIALITY fertilizer
+- dont require crop to recommend fertilizer
+- prompt for more context when only provided with crop
+
+ENDGOAL GUIDELINES
+- get in contact with agronomist
+
+
+
+POSSIBILITIES
+- two bots, one FN, one general
+
+
+THE FUTURE
+- integrating recommendation model data into responses
+
+
+APP FOR BRAINSTORMING
+- Miro
