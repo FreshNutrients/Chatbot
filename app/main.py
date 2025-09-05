@@ -121,7 +121,7 @@ if settings.ENABLE_RATE_LIMITING:
 if settings.ENVIRONMENT == "production":
     app.add_middleware(
         TrustedHostMiddleware, 
-        allowed_hosts=["freshnutrients.com", "*.freshnutrients.com", "localhost"]
+        allowed_hosts=["freshnutrients.com", "*.freshnutrients.com", "*.railway.app", "*.up.railway.app", "localhost"]
     )
 
 # Configure CORS for Wix integration
