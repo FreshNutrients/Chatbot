@@ -194,6 +194,25 @@ async def debug_environment():
     }
 
 
+@app.get("/debug/db-test")
+async def debug_database_connection():
+    """Test database connection with detailed error info."""
+    try:
+        db_info = await db_manager.get_database_info()
+        return {
+            "status": "success",
+            "database_info": db_info,
+            "connection_string_format": f"mssql+pymssql://{settings.AZURE_SQL_USERNAME}:***@{settings.AZURE_SQL_SERVER}/{settings.AZURE_SQL_DATABASE}"
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error_type": type(e).__name__,
+            "error_message": str(e),
+            "connection_string_format": f"mssql+pymssql://{settings.AZURE_SQL_USERNAME}:***@{settings.AZURE_SQL_SERVER}/{settings.AZURE_SQL_DATABASE}"
+        }
+
+
 # Development monitoring endpoints (minimal set)
 @app.get("/debug/status")
 async def debug_status():
