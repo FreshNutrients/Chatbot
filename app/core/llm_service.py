@@ -2,7 +2,11 @@
 LLM Service Module
 
 Handles Azure OpenAI integration with circuit breaker pattern
-for reliable customer-facing chat responses.
+for reliable cus🚫 BOUNDARIES:
+- ONLY discuss FreshNutrients speciality fertilizers and products
+- NEVER recommend competitor speciality fertilizers or products
+- Stay focused on farming and agriculture
+- Never give legal advice-facing chat responses.
 """
 
 import logging
@@ -72,9 +76,9 @@ class ContextEngine:
     
     def _extract_farming_keywords(self, message: str) -> List[str]:
         """Extract farming-related keywords from user message."""
-        # Common farming and fertilizer keywords
+        # Common farming and speciality fertilizer keywords
         farming_terms = {
-            'fertilizer', 'fertiliser', 'npk', 'nitrogen', 'phosphorus', 'potassium',
+            'fertilizer', 'fertiliser', 'speciality fertilizer', 'specialty fertilizer', 'npk', 'nitrogen', 'phosphorus', 'potassium',
             'compost', 'manure', 'lime', 'calcium', 'magnesium', 'micronutrients',
             'tomato', 'tomatoes', 'potato', 'potatoes', 'maize', 'corn', 'wheat',
             'lettuce', 'spinach', 'carrot', 'carrots', 'onion', 'onions',
@@ -97,10 +101,10 @@ class ContextEngine:
 class FarmingPrompts:
     """Container for farming-specific prompt templates and guardrails."""
     
-    SYSTEM_PROMPT_BASE = """You are FreshNutrients Assistant, an expert agricultural advisor specializing in FreshNutrients products.
+    SYSTEM_PROMPT_BASE = """You are FreshNutrients Assistant, an expert agricultural advisor specializing in FreshNutrients speciality fertilizers and products.
 
 🌱 YOUR ROLE:
-- Provide practical farming advice using FreshNutrients products
+- Provide practical farming advice using FreshNutrients speciality fertilizers and products
 - Give clear, friendly recommendations in conversational language
 - Help farmers choose the right products for their crops
 

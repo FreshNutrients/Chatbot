@@ -89,7 +89,7 @@ def extract_context_from_message(message: str) -> Dict[str, Any]:
         "afrikelp plus", "afrikelp", "kelp plus", "afrikelp+",
         "blac-mag", "blacmag", "blac mag", 
         "aquamate", "aqua mate", "aqua-mate",
-        
+        "calsap",    
     ]
     
     # Check for direct product mentions
@@ -101,6 +101,8 @@ def extract_context_from_message(message: str) -> Dict[str, Any]:
                 context["product_name"] = "BlaC-Mag"
             elif product in ["aquamate", "aqua mate", "aqua-mate"]:
                 context["product_name"] = "AquaMate"
+            elif product in ["calsap"]:
+                context["product_name"] = "Calsap"
             else:
                 context["product_name"] = product.title()
             break
@@ -170,6 +172,8 @@ def extract_context_from_message(message: str) -> Dict[str, Any]:
     # Enhanced pH detection and classification
     def classify_ph_issue(message_lower):
         """Classify pH-related queries into specific problem categories."""
+        import re
+        
         # Indicators for high pH/alkaline issues (Soil Salinity)
         high_ph_indicators = [
             "alkaline", "alkalinity", "high ph", "ph too high", "ph is high",
@@ -183,11 +187,17 @@ def extract_context_from_message(message: str) -> Dict[str, Any]:
             "sour soil", "ph below", "ph under", "acidic soil"
         ]
         
-        # Generic pH terms that need clarification
-        generic_ph_terms = [
-            "ph", "ph level", "ph levels", "ph balance", "ph imbalance", 
-            "ph testing", "ph meter", "soil ph", "ph adjustment",
-            "neutralize", "neutralizing", "buffer", "buffering"
+        # Generic pH terms that need clarification - using word boundaries
+        generic_ph_patterns = [
+            r'\bph\b',           # Match "ph" as whole word only
+            r'\bph level\b', 
+            r'\bph levels\b', 
+            r'\bph balance\b', 
+            r'\bph imbalance\b', 
+            r'\bph testing\b', 
+            r'\bph meter\b', 
+            r'\bsoil ph\b', 
+            r'\bph adjustment\b'
         ]
         
         # Check for specific pH issues first
@@ -195,7 +205,7 @@ def extract_context_from_message(message: str) -> Dict[str, Any]:
             return "Soil Salinity"  # High pH/alkaline
         elif any(indicator in message_lower for indicator in low_ph_indicators):
             return "Soil Acidity"   # Low pH/acidic
-        elif any(term in message_lower for term in generic_ph_terms):
+        elif any(re.search(pattern, message_lower) for pattern in generic_ph_patterns):
             return "pH Issues"      # Generic pH concern - needs both problems
         
         return None

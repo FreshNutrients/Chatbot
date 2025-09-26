@@ -70,7 +70,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.API_TITLE,
     version=settings.API_VERSION,
-    description="AI-powered chat API for FreshNutrients products and farming advice",
+    description="AI-powered chat API for FreshNutrients speciality fertilizers and farming advice",
     lifespan=lifespan
 )
 

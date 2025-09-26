@@ -240,7 +240,7 @@ class ProductDataManager:
                             ProductName,
                             TechDoc
                         FROM Products
-                        WHERE Crop LIKE :query
+                        WHERE Crop LIKE :query AND IsDeleted = 0
                         ORDER BY ProductName
                     """)
                 else:
@@ -259,7 +259,7 @@ class ProductDataManager:
                             ProductName,
                             TechDoc
                         FROM Products
-                        WHERE Crop LIKE :query
+                        WHERE Crop LIKE :query AND IsDeleted = 0
                         ORDER BY ProductName
                     """)
                 
@@ -307,7 +307,7 @@ class ProductDataManager:
                         ProductName,
                         TechDoc
                     FROM Products
-                    WHERE ProductName = :product_name
+                    WHERE ProductName = :product_name AND IsDeleted = 0
                 """)
                 
                 result = session.execute(sql, {"product_name": product_name})
@@ -354,7 +354,7 @@ class ProductDataManager:
                         ProductName,
                         TechDoc
                     FROM Products
-                    WHERE ProductName LIKE :query
+                    WHERE ProductName LIKE :query AND IsDeleted = 0
                     ORDER BY ProductName
                 """)
                 
@@ -392,7 +392,7 @@ class ProductDataManager:
         try:
             async with self.db_manager.get_session() as session:
                 # Build dynamic WHERE clause
-                where_conditions = []
+                where_conditions = ["IsDeleted = 0"]
                 params = {}
                 
                 if crop:
@@ -408,7 +408,7 @@ class ProductDataManager:
                     params["problem"] = f"%{problem}%"
                 
                 # If no criteria provided, return empty list
-                if not where_conditions:
+                if len(where_conditions) == 1:  # Only IsDeleted = 0
                     return []
                 
                 where_clause = " AND ".join(where_conditions)
@@ -485,7 +485,7 @@ class ProductDataManager:
                 sql = text("""
                     SELECT DISTINCT Crop
                     FROM Products
-                    WHERE Crop IS NOT NULL
+                    WHERE Crop IS NOT NULL AND IsDeleted = 0
                     ORDER BY Crop
                 """)
                 
@@ -505,7 +505,7 @@ class ProductDataManager:
                 sql = text("""
                     SELECT DISTINCT Problem
                     FROM Products
-                    WHERE Problem IS NOT NULL
+                    WHERE Problem IS NOT NULL AND IsDeleted = 0
                     ORDER BY Problem
                 """)
                 
@@ -525,7 +525,7 @@ class ProductDataManager:
                 sql = text("""
                     SELECT DISTINCT ApplicationType
                     FROM Products
-                    WHERE ApplicationType IS NOT NULL
+                    WHERE ApplicationType IS NOT NULL AND IsDeleted = 0
                     ORDER BY ApplicationType
                 """)
                 
@@ -545,7 +545,7 @@ class ProductDataManager:
                 sql = text("""
                     SELECT DISTINCT GrowthStage
                     FROM Products
-                    WHERE GrowthStage IS NOT NULL
+                    WHERE GrowthStage IS NOT NULL AND IsDeleted = 0
                     ORDER BY GrowthStage
                 """)
                 
@@ -577,7 +577,7 @@ class ProductDataManager:
                         ProductName,
                         TechDoc
                     FROM Products
-                    WHERE Crop LIKE :crop
+                    WHERE Crop LIKE :crop AND IsDeleted = 0
                     ORDER BY ProductName
                 """)
                 
@@ -628,7 +628,7 @@ class ProductDataManager:
                         ProductName,
                         TechDoc
                     FROM Products
-                    WHERE Problem LIKE :problem
+                    WHERE Problem LIKE :problem AND IsDeleted = 0
                     ORDER BY ProductName
                 """)
                 
