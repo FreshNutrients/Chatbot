@@ -161,18 +161,28 @@ async def health_check():
     try:
         # Check database connection
         db_info = await db_manager.get_database_info()
-        db_status = db_info.get("status", "unknown")
+        db_connected = db_info.get("status", "unknown") == "connected"
         
         # Check LLM service status
-        if llm_service.azure_available:
-            llm_status = "configured"
-        else:
-            llm_status = "not_configured"
+        llm_configured = llm_service.azure_available
+        
+        # Check circuit breaker status
+        circuit_breaker_open = llm_service._is_azure_circuit_open()
+        last_failure = llm_service.last_azure_failure
+        
+        # Determine overall status
+        overall_status = "healthy"
+        if not db_connected:
+            overall_status = "degraded"
+        elif circuit_breaker_open:
+            overall_status = "degraded"
         
         return HealthResponse(
-            status="healthy" if db_status == "connected" else "degraded",
-            database=db_status,
-            llm_service=llm_status,
+            status=overall_status,
+            database_connected=db_connected,
+            llm_configured=llm_configured,
+            circuit_breaker_open=circuit_breaker_open,
+            last_azure_failure=last_failure,
             version=settings.API_VERSION
         )
         
